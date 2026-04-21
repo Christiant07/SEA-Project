@@ -25,8 +25,8 @@
 
 // This is an array of objects (drills)
 const drills = [
-  { id: 1, name: "Jumping Jacks", difficulty: "Beginner", category: ["Cardio","Endurance"], goal: ["fat loss","endurance"], routine: "30 sec x 3", time: 90, image: "", description: "A full-body cardio exercise that raises heart rate and improves coordination." },
-  { id: 2, name: "Push-Ups", difficulty: "Intermediate", category: ["Strength","Full Body"], goal: ["strength"], routine: "10-15 reps x 3", time: 135, image: "", description: "An upper-body exercise targeting chest, shoulders, and triceps." },
+  { id: 1, name: "Jumping Jacks", difficulty: "Beginner", category: ["Cardio","Endurance"], goal: ["fat loss","endurance"], routine: "30 sec x 3", time: 90, image: "assets/jumping-jacks.gif", description: "A full-body cardio exercise that raises heart rate and improves coordination." },
+  { id: 2, name: "Push-Ups", difficulty: "Intermediate", category: ["Strength","Full Body"], goal: ["strength"], routine: "10-15 reps x 3", time: 135, image: "assets/push-ups.gif", description: "An upper-body exercise targeting chest, shoulders, and triceps." },
   { id: 3, name: "Bodyweight Squats", difficulty: "Beginner", category: ["Strength"], goal: ["strength","endurance"], routine: "15 reps x 3", time: 135, image: "", description: "A lower-body movement that builds leg strength and balance." },
   { id: 4, name: "Plank", difficulty: "Beginner", category: ["Core","Endurance"], goal: ["core strength"], routine: "30-60 sec x 3", time: 135, image: "", description: "A core stability exercise that strengthens abs and improves posture." },
   { id: 5, name: "Mountain Climbers", difficulty: "Intermediate", category: ["Cardio","Core"], goal: ["fat loss","endurance"], routine: "30 sec x 4", time: 120, image: "", description: "A fast-paced exercise that builds endurance and core strength." },
@@ -84,8 +84,8 @@ let activeFilters = {
 function initApp() {
   // Set up event listeners
   setupEventListeners();
-  // Render all drills initially
-  renderDrills(filteredDrills);
+  // Render all drills
+  applyFilters();
   console.log("App initialized");
 }
 
@@ -100,7 +100,7 @@ function renderDrills(drillList) {
   
   //if the list is empty, no drills will be showen
   if (drillList.length == 0) {
-    drillContainer.textContent = "No drills found. Please search again or reset/change filters";
+    drillContainer.textContent = "No drills found. Please search again or reset/change filters.";
     return;
   }
   
@@ -117,6 +117,7 @@ function createDrillCard(drill) {
   // Create DOM elements
   // Fill with drill data
   // Return the complete card
+
   let newCard = document.createElement("div");
   newCard.classList.add("drill-card");
 
@@ -136,7 +137,7 @@ function createDrillCard(drill) {
   diffStrong.textContent = "Difficulty: ";
   difficulty.append(diffStrong);
   difficulty.append(drill.difficulty);
-  difficulty.classList.add("difficulty");
+  difficulty.classList.add("difficulty", drill.difficulty);
   
   let category = document.createElement("p");
   let catStrong = document.createElement("strong");
@@ -172,209 +173,203 @@ function createDrillCard(drill) {
 }
 
 
-// ===============================
 // FILTERING FUNCTIONS
-// ===============================
 
 // Filters drills based on activeFilters
 function applyFilters() {
-  // Filter allDrills based on difficulty/category/goal
-  // Update filteredDrills
-  // Re-render drills
+  const query = activeFilters.searchQuery.toLowerCase();
+  let result = [...allDrills];
+
+  result = result.filter(drill => {
+    const matchesSearch =
+      drill.name.toLowerCase().includes(query) ||
+      drill.description.toLowerCase().includes(query);
+
+    const matchesDifficulty =
+      activeFilters.difficulty === "" ||
+      drill.difficulty === activeFilters.difficulty;
+
+    const matchesCategory =
+      activeFilters.category === "" ||
+      drill.category.includes(activeFilters.category);
+
+    const matchesGoal =
+      activeFilters.goal === "" ||
+      drill.goal.includes(activeFilters.goal);
+
+    return matchesSearch && matchesDifficulty && matchesCategory && matchesGoal;
+  });
+
+  if (activeFilters.sort !== "") {
+    result = sortDrills(result, activeFilters.sort);
+  }
+
+  filteredDrills = result;
+  renderDrills(filteredDrills);
 }
-
-
-// Handles difficulty filter change
-function filterByDifficulty(level) {
-  // Update activeFilters
-  // Call applyFilters()
-}
-
-
-// Handles category filter change
-function filterByCategory(category) {
-  // Update activeFilters
-  // Call applyFilters()
-}
-
-
-// Handles goal filter change
-function filterByGoal(goal) {
-  // Update activeFilters
-  // Call applyFilters()
-}
-
 
 // Resets all filters
 function resetFilters() {
   // Clear activeFilters
   // Reset filteredDrills
   // Re-render drills
+
+  activeFilters = {
+    searchQuery: "",
+    difficulty: "",
+    category: "",
+    goal: "",
+    sort: "",
+  };
+
+  filteredDrills = [...allDrills];
+
+  document.getElementById("search-input").value = "";
+  document.getElementById("difficulty-filter").value = "";
+  document.getElementById("category-filter").value = "";
+  document.getElementById("goal-filter").value = "";
+  document.getElementById("sort-select").value = "";
+
+  renderDrills(filteredDrills);
 }
 
-
-// ===============================
-// SEARCH FUNCTIONALITY
-// ===============================
-
-// Searches drills by name or keyword
-function searchDrills(query) {
-  // Filter drills based on text input
-  // Update filteredDrills
-  // Re-render
-}
-
-
-// ===============================
 // SORTING FUNCTIONALITY
-// ===============================
 
 // Sort drills (e.g., by difficulty or time)
-function sortDrills(criteria) {
+function sortDrills(list, criteria) {
   // Sort filteredDrills based on criteria
   // Re-render
+
+  const result = [...list];
+  if (criteria === "time") {
+    result.sort((a, b) => a.time - b.time);
+  }
+
+  if (criteria === "difficulty") {
+    const order = {Beginner: 1, Intermediate: 2, Advanced: 3};
+    result.sort((a, b) => order[a.difficulty] - order[b.difficulty]);
+  }
+
+  return result;
 }
 
-
-// ===============================
 // EVENT LISTENERS
-// ===============================
 
 // Attach all event listeners
 function setupEventListeners() {
   // Buttons (filters, reset)
   // Search input
   // Dropdowns
+
+  const searchFilter = document.getElementById("search-input");
+  searchFilter.addEventListener("input", (e) => {activeFilters.searchQuery = e.target.value; applyFilters();});
+
+  const difficultyFilter = document.getElementById("difficulty-filter");
+  difficultyFilter.addEventListener("change", (e) => {activeFilters.difficulty = e.target.value; applyFilters();});
+
+  const categoryFilter = document.getElementById("category-filter");
+  categoryFilter.addEventListener("change", (e) => {activeFilters.category = e.target.value; applyFilters();});
+
+  const goalFilter = document.getElementById("goal-filter");
+  goalFilter.addEventListener("change", (e) => {activeFilters.goal = e.target.value; applyFilters();});
+
+  const sortFilter = document.getElementById("sort-select");
+  sortFilter.addEventListener("change", (e) => {activeFilters.sort = e.target.value; applyFilters();});
+
+  const resetFilter = document.getElementById("reset-btn");
+  resetFilter.addEventListener("click", () => {resetFilters()});
+
+  const generateBtn = document.getElementById("generate-plan");
+  generateBtn.addEventListener("click", generateWorkoutPlan);
 }
 
+// Workout Plan Generator
 
-// ===============================
-// PHASE 3 (OPTION 1 IDEAS)
-// ===============================
-
-// Generates a workout plan based on filters
 function generateWorkoutPlan() {
-  // Select drills based on user preferences
-  // Combine into a routine
+  let pool = [...filteredDrills];
+
+  if (pool.length === 0) {
+    document.getElementById("workout-plan").innerHTML =
+      "<p>No drills available to generate a plan.</p>";
+    return;
+  }
+
+  // prioritize filters 
+  const shuffled = shuffleArray(pool);
+
+  // pick 6–8 drills depending on availability
+  const size = Math.min(6, shuffled.length);
+  const plan = shuffled.slice(0, size);
+
+  renderWorkoutPlan(plan);
 }
 
+// Used Fisher-Yates shuffle to pick random drills
+function shuffleArray(array) {
+  const arr = [...array];
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  return arr;
+}
 
 // Calculates total workout time
 function calculateTotalTime(drillList) {
   // Sum time values
   // Return total
+  return drillList.reduce((sum, drill) => sum + drill.time, 0);
 }
 
 
 // Displays workout plan to user
 function renderWorkoutPlan(plan) {
-  // Show selected drills in a separate section
+  const container = document.getElementById("workout-plan");
+  container.innerHTML = "";
+
+  if (plan.length === 0) {
+    let msg = document.createElement("p");
+    msg.textContent = "No workout plan generated. Try adjusting filters.";
+    container.appendChild(msg);
+    return;
+  }
+
+  let totalTime = calculateTotalTime(plan);
+
+  let title = document.createElement("h2");
+  title.textContent = "Workout Plan";
+  container.appendChild(title);
+
+  let time = document.createElement("p");
+  time.textContent = "Total Time: " + totalTime + " sec";
+  container.appendChild(time);
+
+  for (let i = 0; i < plan.length; i++) {
+    let drill = plan[i];
+
+    let item = document.createElement("div");
+    item.classList.add("plan-item");
+
+    let name = document.createElement("p");
+    let strong = document.createElement("strong");
+    strong.textContent = (i + 1) + ". ";
+    name.append(strong);
+    name.append(drill.name);
+
+    let routine = document.createElement("p");
+    routine.textContent = "Routine: " + drill.routine;
+
+    let timeText = document.createElement("p");
+    timeText.textContent = "Time: " + drill.time + " sec";
+
+    item.append(name, routine, timeText);
+    container.appendChild(item);
+  }
 }
 
 
-// ===============================
 // START APP
-// ===============================
 
 initApp();
-
-
-
-
-// /**
-//  * Data Catalog Project Starter Code - SEA Stage 2
-//  *
-//  * This file is where you should be doing most of your work. You should
-//  * also make changes to the HTML and CSS files, but we want you to prioritize
-//  * demonstrating your understanding of data structures, and you'll do that
-//  * with the JavaScript code you write in this file.
-//  *
-//  * The comments in this file are only to help you learn how the starter code
-//  * works. The instructions for the project are in the README. That said, here
-//  * are the three things you should do first to learn about the starter code:
-//  * - 1 - Change something small in index.html or style.css, then reload your
-//  *    browser and make sure you can see that change.
-//  * - 2 - On your browser, right click anywhere on the page and select
-//  *    "Inspect" to open the browser developer tools. Then, go to the "console"
-//  *    tab in the new window that opened up. This console is where you will see
-//  *    JavaScript errors and logs, which is extremely helpful for debugging.
-//  *    (These instructions assume you're using Chrome, opening developer tools
-//  *    may be different on other browsers. We suggest using Chrome.)
-//  * - 3 - Add another string to the titles array a few lines down. Reload your
-//  *    browser and observe what happens. You should see a fourth "card" appear
-//  *    with the string you added to the array, but a broken image.
-//  *
-//  */
-
-// const FRESH_PRINCE_URL =
-//   "https://upload.wikimedia.org/wikipedia/en/3/33/Fresh_Prince_S1_DVD.jpg";
-// const CURB_POSTER_URL =
-//   "https://m.media-amazon.com/images/M/MV5BZDY1ZGM4OGItMWMyNS00MDAyLWE2Y2MtZTFhMTU0MGI5ZDFlXkEyXkFqcGdeQXVyMDc5ODIzMw@@._V1_FMjpg_UX1000_.jpg";
-// const EAST_LOS_HIGH_POSTER_URL =
-//   "https://static.wikia.nocookie.net/hulu/images/6/64/East_Los_High.jpg";
-
-// // This is an array of strings (TV show titles)
-// let titles = [
-//   "Fresh Prince of Bel Air",
-//   "Curb Your Enthusiasm",
-//   "East Los High",
-// ];
-// // Your final submission should have much more data than this, and
-// // you should use more than just an array of strings to store it all.
-
-// // This function adds cards the page to display the data in the array
-// function showCards() {
-//   const cardContainer = document.getElementById("card-container");
-//   cardContainer.innerHTML = "";
-//   const templateCard = document.querySelector(".card");
-
-//   for (let i = 0; i < titles.length; i++) {
-//     let title = titles[i];
-
-//     // This part of the code doesn't scale very well! After you add your
-//     // own data, you'll need to do something totally different here.
-//     let imageURL = "";
-//     if (i == 0) {
-//       imageURL = FRESH_PRINCE_URL;
-//     } else if (i == 1) {
-//       imageURL = CURB_POSTER_URL;
-//     } else if (i == 2) {
-//       imageURL = EAST_LOS_HIGH_POSTER_URL;
-//     }
-
-//     const nextCard = templateCard.cloneNode(true); // Copy the template card
-//     editCardContent(nextCard, title, imageURL); // Edit title and image
-//     cardContainer.appendChild(nextCard); // Add new card to the container
-//   }
-// }
-
-// function editCardContent(card, newTitle, newImageURL) {
-//   card.style.display = "block";
-
-//   const cardHeader = card.querySelector("h2");
-//   cardHeader.textContent = newTitle;
-
-//   const cardImage = card.querySelector("img");
-//   cardImage.src = newImageURL;
-//   cardImage.alt = newTitle + " Poster";
-
-//   // You can use console.log to help you debug!
-//   // View the output by right clicking on your website,
-//   // select "Inspect", then click on the "Console" tab
-//   console.log("new card:", newTitle, "- html: ", card);
-// }
-
-// // This calls the addCards() function when the page is first loaded
-// document.addEventListener("DOMContentLoaded", showCards);
-
-// function quoteAlert() {
-//   console.log("Button Clicked!");
-//   alert(
-//     "I guess I can kiss heaven goodbye, because it got to be a sin to look this good!",
-//   );
-// }
-
-// function removeLastCard() {
-//   titles.pop(); // Remove last item in titles array
-//   showCards(); // Call showCards again to refresh
-// }
