@@ -1,31 +1,67 @@
-<!doctype html>
-<html>
-  <head>
-    <title>LA TV Shows | Home</title>
-    <meta name="description" content="A Catalog of Shows Set in Los Angeles" />
-    <link rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="scripts.js"></script>
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Drill Catalog</title>
 
-  <body>
-    <header class="main-header">
-      <h1 class="title">LA TV Shows</h1>
-    </header>
-    <div id="card-container"></div>
-    <div class="card" style="display: none">
-      <div class="card-content">
-        <h2>TV Show Title</h2>
-        <img src="" alt="TV Show Poster" />
-        <ul>
-          <li>Bullet Point 1</li>
-          <li>Bullet Point 2</li>
-          <li>Bullet Point 3</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer">
-      <button onclick="quoteAlert()">Get A Quote!</button>
-      <button onclick="removeLastCard()">Remove A Card!</button>
-    </div>
-  </body>
+  <!-- Link CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Workout Drill Catalog</h1>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input type="text" id="search-input" placeholder="Search For Drills...">
+
+    <select id="difficulty-filter">
+      <option value="">All Difficulties</option>
+      <option value="Beginner">Beginner</option>
+      <option value="Intermediate">Intermediate</option>
+      <option value="Advanced">Advanced</option>
+    </select>
+
+    <select id="category-filter">
+      <option value="">All Categories</option>
+      <option value="Cardio">Cardio</option>
+      <option value="Strength">Strength</option>
+      <option value="Core">Core</option>
+      <option value="Mobility">Mobility</option>
+      <option value="Speed">Speed</option>
+      <option value="Full Body">Full Body</option>
+      <option value="Endurance">Endurance</option>
+    </select>
+
+    <select id="goal-filter">
+      <option value="">All Goals</option>
+      <option value="strength">Strength</option>
+      <option value="endurance">Endurance</option>
+      <option value="fat loss">Fat Loss</option>
+      <option value="power">Power</option>
+      <option value="mobility">Mobility</option>
+      <option value="core strength">Core Strength</option>
+      <option value="speed">Speed</option>
+    </select>
+
+    <select id="sort-select">
+      <option value="">Sort By</option>
+      <option value="time">Time</option>
+      <option value="difficulty">Difficulty</option>
+    </select>
+
+    <button id="reset-btn">Reset Filters</button>
+  </div>
+
+  <!-- Drill Cards -->
+  <div id="drill-container" class="grid"></div>
+
+  <!-- Link JS (later) -->
+  <script src="scripts.js"></script>
+
+</body>
 </html>

@@ -1,70 +1,85 @@
-html,
-body {
+/* ===== Reset ===== */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.main-header {
-  background-color: rgba(0, 0, 0, 0.3);
-  padding-bottom: 10px;
-}
-
-.title {
-  text-align: center;
-  margin: 0;
-  font-size: 8em;
-  font-family: "Helvetica";
-  font-weight: normal;
-  color: white;
-}
-
-#card-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px;
-}
-
-.card {
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 5px;
-}
-
-.card-content {
+body {
+  background-color: #f5f7fa;
+  color: #333;
   padding: 20px;
-  font-family: "Verdana";
-  color: #777;
 }
 
-.card-content h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 10px;
-}
-
-button {
+/* ===== Header ===== */
+header {
   text-align: center;
-  background-color: #666;
-  border: none;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: 40px;
-  border-radius: 10px;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  margin: 5px;
+  margin-bottom: 30px;
 }
+
+header h1 {
+  font-size: 2.5rem;
+  color: #222;
+}
+
+/* ===== Filters ===== */
+.filters {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filters select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===== Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin: 2px;
+}
+
+/* Difficulty Colors */
+.difficulty {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.Beginner { color: green; }
+.Intermediate { color: orange; }
+.Advanced { color: red; }
