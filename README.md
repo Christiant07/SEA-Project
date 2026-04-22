@@ -6,6 +6,8 @@ away with a ready-to-go workout plan. No gym required.
 
 This was built for the Snap Engineering Academy Stage 2 project.
 
+<img width="1710" height="963" alt="Screenshot 2026-04-21 at 6 13 27 PM" src="https://github.com/user-attachments/assets/f51eb7f1-64b7-42e5-8d09-6cd749388331" />
+
 ---
 
 ## 🧠 Features
